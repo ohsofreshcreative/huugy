@@ -26,7 +26,7 @@
 							:aria-label="'Pobierz: ' . $document['title']"
 							download>
 							Pobierz
-							<img src="{{ Vite::asset('resources/images/download.svg') }}" class="w-4 h-4" alt="" aria-hidden="true" />
+							<img src="{{ get_template_directory_uri() }}/resources/images/download.svg" class="w-4 h-4" alt="" aria-hidden="true" />
 						</x-button>
 					</li>
 					@endforeach
