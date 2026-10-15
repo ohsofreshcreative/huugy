@@ -9,103 +9,103 @@
 :root {
 	/* base */
 	/* PRIMARY */
-	--primary: 232 119 34;
-	/* #E87722 */
-	--p-hover: 46 24 7;
-	/* #2E1807 */
+	--primary: 67 176 42;
+	/* #43B02A */
+	--p-hover: 13 35 8;
+	/* #0D2308 */
 
-	--p-50: 255 222 197;
-	/* #FFDEC5 */
-	--p-100: 250 206 173;
-	/* #FACEAD */
-	--p-200: 253 180 126;
-	/* #FDB47E */
-	--p-300: 249 164 99;
-	/* #F9A463 */
-	--p-400: 242 142 66;
-	/* #F28E42 */
-	--p-500: 232 119 34;
-	/* #E87722 */
-	--p-600: 193 99 28;
-	/* #C1631C */
-	--p-700: 155 79 23;
-	/* #9B4F17 */
-	--p-800: 116 60 17;
-	/* #743C11 */
-	--p-900: 77 40 11;
-	/* #4D280B */
-	--p-dark: 46 24 7;
-	/* #2E1807 */
+	--p-50: 203 241 195;
+	/* #CBF1C3 */
+	--p-100: 176 232 164;
+	/* #B0E8A4 */
+	--p-200: 151 224 135;
+	/* #97E087 */
+	--p-300: 119 212 98;
+	/* #77D462 */
+	--p-400: 92 192 69;
+	/* #5CC045 */
+	--p-500: 67 176 42;
+	/* #43B02A */
+	--p-600: 56 147 35;
+	/* #389323 */
+	--p-700: 45 117 28;
+	/* #2D751C */
+	--p-800: 34 88 21;
+	/* #225815 */
+	--p-900: 22 59 14;
+	/* #163B0E */
+	--p-dark: 13 35 8;
+	/* #0D2308 */
 
-	--action: rgb(232, 119, 34);
+	--action: rgb(67, 176, 42);
 	/* SECONDARY */
-	--secondary: 76 76 76;
-	/* #4C4C4C */
-	--s-hover: 63 63 63;
-	/* #3F3F3F */
+	--secondary: 220 255 192;
+	/* #DCFFC0 */
+	--s-hover: 183 213 160;
+	/* #B7D5A0 */
 
-	--s-50: 219 219 219;
-	/* #DBDBDB */
-	--s-100: 195 195 195;
-	/* #C3C3C3 */
-	--s-200: 166 166 166;
-	/* #A6A6A6 */
-	--s-300: 136 136 136;
-	/* #888888 */
-	--s-400: 106 106 106;
-	/* #6A6A6A */
-	--s-500: 76 76 76;
-	/* #4C4C4C */
-	--s-600: 63 63 63;
-	/* #3F3F3F */
-	--s-700: 51 51 51;
-	/* #333333 */
-	--s-800: 38 38 38;
-	/* #262626 */
-	--s-900: 25 25 25;
-	/* #191919 */
-	--s-dark: 15 15 15;
-	/* #0F0F0F */
+	--s-50: 248 255 242;
+	/* #F8FFF2 */
+	--s-100: 243 255 234;
+	/* #F3FFEA */
+	--s-200: 238 255 224;
+	/* #EEFFE0 */
+	--s-300: 232 255 213;
+	/* #E8FFD5 */
+	--s-400: 226 255 203;
+	/* #E2FFCB */
+	--s-500: 220 255 192;
+	/* #DCFFC0 */
+	--s-600: 183 213 160;
+	/* #B7D5A0 */
+	--s-700: 147 170 128;
+	/* #93AA80 */
+	--s-800: 110 128 96;
+	/* #6E8060 */
+	--s-900: 73 85 64;
+	/* #495540 */
+	--s-dark: 44 51 38;
+	/* #2C3326 */
 
 	/* THIRD */
-	--third: 70 152 202;
-	/* #4698CA */
-	--t-hover: 58 127 168;
-	/* #3A7FA8 */
+	--third: 0 189 237;
+	/* #00BDED */
+	--t-hover: 0 158 198;
+	/* #009EC6 */
 
-	--t-50: 209 232 247;
-	/* #D1E8F7 */
-	--t-100: 182 220 243;
-	/* #B6DCF3 */
-	--t-200: 153 204 235;
-	/* #99CCEB */
-	--t-300: 121 186 225;
-	/* #79BAE1 */
-	--t-400: 97 177 225;
-	/* #61B1E1 */
-	--t-500: 70 152 202;
-	/* #4698CA */
-	--t-600: 58 127 168;
-	/* #3A7FA8 */
-	--t-700: 47 101 135;
-	/* #2F6587 */
-	--t-800: 35 76 101;
-	/* #234C65 */
-	--t-900: 23 51 67;
-	/* #173343 */
-	--t-dark: 14 30 40;
-	/* #0E1E28 */
+	--t-50: 182 240 255;
+	/* #B6F0FF */
+	--t-100: 148 233 254;
+	/* #94E9FE */
+	--t-200: 113 224 253;
+	/* #71E0FD */
+	--t-300: 71 216 253;
+	/* #47D8FD */
+	--t-400: 43 200 240;
+	/* #2BC8F0 */
+	--t-500: 0 189 237;
+	/* #00BDED */
+	--t-600: 0 158 198;
+	/* #009EC6 */
+	--t-700: 0 126 158;
+	/* #007E9E */
+	--t-800: 0 95 119;
+	/* #005F77 */
+	--t-900: 0 63 79;
+	/* #003F4F */
+	--t-dark: 0 38 47;
+	/* #00262F */
 
 	/* neutrals / fixed backgrounds */
 	--text-body: #4C4C4C;
 	--gray: #2a3f50;
-	--bg: #F7FDFF;
+	--bg: #EBFCEA;
 	--bg-light: rgb(var(--s-100));
 	--bg-lighter: rgb(var(--s-50));
 	--bg-bright: #FFF6EF;
 	--bg-brand: #002704;
 	--bg-dark: #071622;
-	--bright: #FFF6EF;
+	--bright: #f6fff6;
 }
 
 @theme {
@@ -174,7 +174,7 @@
 	--color-secondary-lighter: var(--color-secondary-100);
 
 	--color-muted: var(--color-secondary-500);
-	--gradient: linear-gradient(90deg, #2265CB 0%, #181D84 100%);
+	--gradient: linear-gradient(90deg, #163B0E 0%, #093824 100%);
 	--gradient-light: linear-gradient(-90deg, #0E3A2D 0%, #0A533D 100%);
 	--gradient-s: linear-gradient(-90deg, #DE855D 0%, #D37A51 100%);
 
@@ -206,11 +206,31 @@
 
 /*-- USED ---*/
 @import '../css/blocks/hero.scss';
-@import '../css/blocks/paths.scss';
 @import '../css/blocks/slider.scss';
+@import '../css/blocks/featured.scss';
+@import '../css/blocks/categories.scss';
+@import '../css/blocks/steps.scss';
+
+@import '../css/blocks/whyus.scss';
+
+@import '../css/blocks/promo.scss';
+
+@import '../css/blocks/reviews.scss';
+
+@import '../css/blocks/posts.scss';
+
+@import '../css/blocks/cta.scss';
+
+@import '../css/blocks/quote.scss';
+
+@import '../css/blocks/find.scss';
+
+@import '../css/blocks/download.scss';
+
+/*-- NOT USED ---*/
+@import '../css/blocks/paths.scss';
 @import '../css/blocks/packages.scss';
 @import '../css/blocks/values.scss';
-@import '../css/blocks/steps.scss';
 @import '../css/blocks/experience.scss';
 @import '../css/blocks/banner.scss';
 @import '../css/blocks/switcher.scss';
@@ -220,20 +240,14 @@
 @import '../css/blocks/jobs.scss';
 @import '../css/blocks/sectors.scss';
 @import '../css/blocks/challenges.scss';
-@import '../css/blocks/whyus.scss';
 @import '../css/blocks/example.scss';
 @import '../css/blocks/proces.scss';
 @import '../css/blocks/clients.scss';
 @import '../css/blocks/locations.scss';
-@import '../css/blocks/featured.scss';
-@import '../css/blocks/categories.scss';
 
-/*-- NOT USED ---*/
 @import '../css/blocks/about.scss';
 @import '../css/blocks/content.scss';
-@import '../css/blocks/cta.scss';
 @import '../css/blocks/logos.scss';
-@import '../css/blocks/reviews.scss';
 @import '../css/blocks/product.scss';
 @import '../css/blocks/table.scss';
 @import '../css/blocks/products.scss';

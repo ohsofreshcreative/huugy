@@ -1,2 +1,6 @@
 .b-banner {
 }
+
+.main > .b-banner:first-child {
+	margin-top: -104px;
+}

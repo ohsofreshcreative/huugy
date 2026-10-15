@@ -24,6 +24,8 @@ class App extends Composer
 			'siteName' => $this->siteName(),
 			'logo' => get_field('logo', 'option'),
 			'logo_footer' => get_field('logo_footer', 'option'),
+			'footer_newsletter' => get_field('footer_newsletter', 'option') ?: [],
+			'login_modal' => get_field('login_modal', 'option') ?: [],
 			'footer_contact' => get_field('footer_contact', 'option'),
 		];
 	}

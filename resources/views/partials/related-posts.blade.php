@@ -15,7 +15,7 @@ $_related_query = new WP_Query([
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-8">
             @while($_related_query->have_posts())
             @php $_related_query->the_post(); @endphp
-            @include('partials.content')
+            @include('partials.category-post', ['featured' => false])
             @endwhile
             @php wp_reset_postdata(); @endphp
         </div>

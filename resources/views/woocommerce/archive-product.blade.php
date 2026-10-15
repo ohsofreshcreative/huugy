@@ -36,100 +36,103 @@ $r_values = get_field('r_values', 'option');
 // Pobranie opisu kategorii / archiwum / sklepu
 $description = ($term instanceof WP_Term) ? term_description($term->term_id, $term->taxonomy) : ($g_oshop['description'] ?? '');
 
-// Przyciski kategorii (na sklepie i na podstronach kategorii). Domyślna kategoria zastępowana przyciskiem "Wszystkie",
-// podświetlonym na /sklep. Na podstronie kategorii podświetlona jest wybrana kategoria.
-$current_term_id = ($term instanceof WP_Term) ? $term->term_id : 0;
-$default_cat_id = (int) get_option('default_product_cat');
-$category_terms = get_terms([
-'taxonomy' => 'product_cat',
-'hide_empty' => true,
-'orderby' => 'menu_order',
-'order' => 'ASC',
-'exclude' => $default_cat_id ? [$default_cat_id] : [],
-]);
-
-$category_buttons = [];
-if (!is_wp_error($category_terms)) {
-$category_buttons[] = [
-'title' => 'Wszystkie',
-'url' => function_exists('wc_get_page_permalink') ? wc_get_page_permalink('shop') : home_url('/'),
-'active' => $is_shop_main,
-];
-
-foreach ($category_terms as $category_term) {
-$category_buttons[] = [
-'title' => $category_term->name,
-'url' => get_term_link($category_term),
-'active' => $category_term->term_id === $current_term_id,
-];
-}
-}
+// Kafelki kategorii na głównej stronie sklepu.
+$category_items = $is_shop_main ? \App\Blocks\Categories::items() : [];
 @endphp
 
-<header class="b-herosub relative overflow-hidden">
-	<div class="__wrapper relative">
+<header class="b-herosub relative bg-secondary-light overflow-hidden">
 
-		<div class="__inside c-main relative z-20 pt-50">
-			<div class="__content w-full md:w-2/3">
-				@if(function_exists('yoast_breadcrumb'))
-				<div class="__breadcrumb mb-4">
-					{!! yoast_breadcrumb('<p id="breadcrumbs">','</p>') !!}
-				</div>
-				@endif
-
-				<h1 class=""> {!! strip_tags($display_header, '<strong><em><a><br>') !!}</h1>
-
-				@if (!empty($description))
-				<div id="category-desc-content" class="mt-4">
-					{!! $description !!}
-				</div>
-				@endif
+	<div class="__wrapper c-main relative z-20 grid grid-cols-1 md:grid-cols-2 items-center pt-30">
+		<div class="pt-20 pb-10">
+			@if(function_exists('yoast_breadcrumb'))
+			<div class="__breadcrumb [&_a]:!text-body [&_span]:!text-primary  mb-4">
+				{!! yoast_breadcrumb('<p id="breadcrumbs">','</p>') !!}
 			</div>
+			@endif
 
-			@if (!empty($category_buttons))
-			<div class="inline-buttons m-btn flex-wrap">
-				@foreach ($category_buttons as $item)
-				<x-button :href="$item['url']" variant="{{ $item['active'] ? 'primary-small' : 'outline-primary-small' }}">{{ $item['title'] }}</x-button>
-				@endforeach
+			<h1 class=""> {!! strip_tags($display_header, '<strong><em><a><br>') !!}</h1>
+
+			@if (!empty($description))
+			<div id="category-desc-content" class="mt-4">
+				{!! $description !!}
 			</div>
 			@endif
 		</div>
 
+		@if (!empty($hero_image))
+		<x-picture
+			:image="$hero_image"
+			figureClass="__img"
+			class="w-full h-auto object-contain" />
+		@endif
 	</div>
+
 </header>
-<div class="c-main flex flex-col lg:flex-row gap-10 pt-5 pb-16">
 
-	{{-- Sidebar z filtrami --}}
-	@if (is_active_sidebar('shop-sidebar'))
-	<aside class="__shop-sidebar w-full lg:w-1/4">
-		@php dynamic_sidebar('shop-sidebar') @endphp
-	</aside>
-	@endif
+<div class=" bg-white flex flex-col lg:flex-row gap-10 -spt pb-16">
 
-	{{-- Produkty --}}
-	<div class="__products min-w-0">
-		@if (woocommerce_product_loop())
-		@php
-		do_action('woocommerce_before_shop_loop');
-		woocommerce_product_loop_start();
-		@endphp
-
-		@if (wc_get_loop_prop('total'))
-		@while (have_posts())
-		@php
-		the_post();
-		do_action('woocommerce_shop_loop');
-		wc_get_template_part('content', 'product');
-		@endphp
-		@endwhile
+	<div class="c-main">
+		@if (!empty($category_items))
+		<div class="__categories grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 py-16">
+			@foreach ($category_items as $item)
+			@php
+			$compact = $loop->count >= 3 && $loop->count % 2 === 1 && $loop->remaining < 2;
+				@endphp
+				<a href="{{ esc_url($item['url']) }}" aria-label="{{ 'Sprawdź: ' . $item['title'] }}" @class([ '__card group flex flex-col bg-background-light hover:bg-background-light/50 focus-visible:bg-background-light/50 transition-colors duration-200 motion-reduce:transition-none radius p-8' , 'lg:col-span-2'=> !$compact,
+				])>
+				@if (!empty($item['image']['ID']) || !empty($item['image']['url']))
+				<x-picture
+					:image="$item['image']"
+					:figureClass="$compact ? '__img w-full' : '__img w-full lg:w-1/2'"
+					class="w-full img-xs object-contain"
+					loading="lazy" />
+				@endif
+				<div class="__content flex flex-col items-start pt-12">
+					<h2 class="text-h6">{{ $item['title'] }}</h2>
+					<span class="btn btn-underline group-hover:after:ml-3! group-focus-visible:after:ml-3! motion-reduce:after:transition-none">
+						Sprawdź
+					</span>
+				</div>
+				</a>
+				@endforeach
+		</div>
 		@endif
 
-		@php
-		woocommerce_product_loop_end();
-		do_action('woocommerce_after_shop_loop');
-		@endphp
-		@else
-		@php do_action('woocommerce_no_products_found') @endphp
+		@if (!$is_shop_main)
+		<div data-shop-catalog class="flex flex-col lg:flex-row gap-10">
+      <p data-shop-status class="sr-only" role="status"></p>
+			@if (is_active_sidebar('sidebar-shop'))
+			<aside class="__shop-sidebar w-full lg:w-1/4 shrink-0">
+				@php dynamic_sidebar('sidebar-shop') @endphp
+			</aside>
+			@endif
+
+			<div class="__products min-w-0 flex-1">
+				@if (woocommerce_product_loop())
+				@php
+				do_action('woocommerce_before_shop_loop');
+				woocommerce_product_loop_start();
+				@endphp
+
+				@if (wc_get_loop_prop('total'))
+				@while (have_posts())
+				@php
+				the_post();
+				do_action('woocommerce_shop_loop');
+				wc_get_template_part('content', 'product');
+				@endphp
+				@endwhile
+				@endif
+
+				@php
+				woocommerce_product_loop_end();
+				do_action('woocommerce_after_shop_loop');
+				@endphp
+				@else
+				@php do_action('woocommerce_no_products_found') @endphp
+				@endif
+			</div>
+		</div>
 		@endif
 	</div>
 
@@ -140,9 +143,10 @@ $category_buttons[] = [
 @php
 $g_octa = get_field('g_octa', 'option');
 $form = false;
-$sectionClass = '!mt-0';
+$sectionClass = '-smt';
 $section_id = '';
 $section_class = '';
 $background = 'none';
 @endphp
 @include('blocks.cta')
+@endsection

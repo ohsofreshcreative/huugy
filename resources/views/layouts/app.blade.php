@@ -10,8 +10,8 @@
 
 	{{-- Fonts --}}
 	<link rel="preconnect" href="https://fonts.googleapis.com">
-	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-	<link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&family=Varela+Round&display=swap" rel="stylesheet">
 
 	{{-- Styles --}}
 	@vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -36,9 +36,21 @@
 
 		@yield('content')
 
+    @elseif (function_exists('is_account_page') && is_account_page() && !is_user_logged_in() && !is_wc_endpoint_url() && 'yes' === get_option('woocommerce_enable_myaccount_registration'))
+
+    <main id="main" class="main">
+      @yield('content')
+    </main>
+
 		@elseif (function_exists('is_woocommerce') && (is_product() || is_cart() || is_checkout() || is_account_page()))
 
 		<main id="main" class="c-main -menu-mt py-10">
+			@yield('content')
+		</main>
+
+		@elseif (is_home() || is_singular('post') || is_category() || is_tag())
+
+		<main id="main" class="main">
 			@yield('content')
 		</main>
 
@@ -57,6 +69,10 @@
     @if (function_exists('WC'))
         @include('partials.cart-drawer')
     @endif
+
+  @if (function_exists('WC') && !is_user_logged_in())
+    @include('partials.login-modal')
+  @endif
 
 	@php(do_action('get_footer'))
 	@php(wp_footer())

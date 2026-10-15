@@ -3,42 +3,46 @@
 		font-size: 16px;
 	}
 
-	.__data a {
-	}
-
 	.__data a:hover {
-		color: var(--text-s-lighter);
+		color: var(--color-primary);
 	}
 
-	.__phone {
+	.__phone,
+	.__mail,
+	.__address {
 		display: flex;
+		align-items: flex-start;
+	}
+
+	.__phone::before,
+	.__mail::before,
+	.__address::before {
+		content: '';
+		width: 28px;
+		height: 28px;
+		flex: 0 0 28px;
+		margin-right: 16px;
+		background-color: var(--color-primary);
+		-webkit-mask-position: center;
+		-webkit-mask-repeat: no-repeat;
+		-webkit-mask-size: contain;
+		mask-position: center;
+		mask-repeat: no-repeat;
+		mask-size: contain;
 	}
 
 	.__phone::before {
-		content: url("@images/phone.svg");
-		margin-right: 16px;
-		position: relative;
-		top: 4px;
-		max-width: 40px;
-	}
-
-	.__mail {
-		display: flex;
+		-webkit-mask-image: url('@images/phone.svg');
+		mask-image: url('@images/phone.svg');
 	}
 
 	.__mail::before {
-		content: url('@images/mail.svg');
-		margin-right: 16px;
-		position: relative;
-		top: 4px;
-		max-width: 40px;
+		-webkit-mask-image: url('@images/mail.svg');
+		mask-image: url('@images/mail.svg');
 	}
 
 	.__address::before {
-		content: url('/wp-content/uploads/2026/01/place.svg');
-		margin-right: 16px;
-		position: relative;
-		top: 4px;
-		max-width: 40px;
+		-webkit-mask-image: url('@images/place.svg');
+		mask-image: url('@images/place.svg');
 	}
 }

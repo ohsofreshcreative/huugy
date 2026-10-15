@@ -55,21 +55,6 @@
 			}
 		}
 	}
-
-	.__shape {
-		position: absolute;
-		left: -76px;
-		bottom: 52px;
-		width: 190px;
-		aspect-ratio: 1;
-		border: 28px solid var(--color-secondary-400);
-		border-image: linear-gradient(145deg, var(--color-secondary-300), var(--color-secondary-800)) 1;
-	}
-
-	.__img--stroke {
-		border: 28px solid var(--color-secondary-400);
-		border-image: linear-gradient(145deg, var(--color-secondary-300), var(--color-secondary-800)) 1;
-	}
 }
 
 

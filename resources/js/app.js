@@ -10,15 +10,23 @@ import.meta.glob(['../images/**', '../fonts/**']);
 
 // Twoje niestandardowe moduły JS
 import './menubar.js';
-import './footer-accordion.js';
 import './cart-drawer.js';
 
 /*--- USED ---*/
 
 document.addEventListener('DOMContentLoaded', () => {
+  if (document.querySelector('#login-modal')) import('./login-modal');
+  if (document.querySelector('.woocommerce-product-gallery')) import('./woocommerce-gallery');
+  if (document.querySelector('.product-gallery')) import('./product-gallery');
+  if (document.querySelector('.variations_form')) import('./variation-dropdowns');
+  if (document.querySelector('[data-product-configurator]')) import('./product-configurator');
+  if (document.querySelector('.__shop-sidebar .widget_price_filter')) import('./price-filter');
+  if (document.querySelector('[data-shop-catalog]')) import('./shop-filters');
   if (document.querySelector('.b-reviews')) import('./blocks/reviews');
   if (document.querySelector('.b-tabs')) import('./blocks/tabs');
   if (document.querySelector('.b-slider')) import('./blocks/slider');
+  if (document.querySelector('.b-featured')) import('./blocks/featured');
+  if (document.querySelector('.b-promo')) import('./blocks/promo');
   if (document.querySelector('.b-steps')) import('./blocks/steps');
   if (document.querySelector('.b-catalogues')) import('./blocks/catalogues');
 });

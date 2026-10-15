@@ -8,12 +8,12 @@ use App\Support\SectionClasses;
 
 class Whyus extends Block
 {
-	public $name = 'Dlaczego my?';
+	public $name = 'Whyus';
 	public $description = 'whyus';
 	public $slug = 'whyus';
 	public $category = 'formatting';
 	public $icon = 'editor-table';
-	public $keywords = ['tresc', 'porownanie', 'tabela'];
+	public $keywords = ['tresc', 'zalety', 'zdjecia'];
 	public $mode = 'edit';
 	public $supports = [
 		'align' => false,
@@ -28,10 +28,11 @@ class Whyus extends Block
 		$whyus = new FieldsBuilder('whyus');
 
 		$whyus
-			->setLocation('block', '==', 'acf/whyus') // ważne!
+			->setLocation('block', '==', 'acf/whyus')
 			/*--- GROUP ---*/
 			->addTab('Elementy', ['placement' => 'top'])
 			->addGroup('g_whyus', ['label' => ''])
+			->addText('subtitle', ['label' => 'Podtytuł'])
 			->addText('header', ['label' => 'Nagłówek'])
 			->addWysiwyg('text', [
 				'label' => 'Treść',
@@ -39,36 +40,27 @@ class Whyus extends Block
 				'toolbar' => 'full',
 				'media_upload' => true,
 			])
-			->addText('col1_title', [
-				'label' => 'Tytuł kolumny #1',
-				'default_value' => 'Współpraca z Bergermann',
-			])
-			->addText('col2_title', [
-				'label' => 'Tytuł kolumny #2',
-				'default_value' => 'Samodzielna rekrutacja',
-			])
 			->endGroup()
 
-			/*--- TAB #2 ---*/
-			->addTab('Punkty', ['placement' => 'top'])
-			->addRepeater('r_whyus_col1', [
-				'label' => 'Punkty - kolumna #1',
+			->addTab('Kafelki', ['placement' => 'top'])
+			->addRepeater('r_whyus', [
+				'label' => 'Kafelki',
 				'layout' => 'table',
-				'min' => 1,
-				'button_label' => 'Dodaj punkt',
+				'max' => 6,
+				'button_label' => 'Dodaj kafelek',
+				'instructions' => 'Pierwsze dwa kafelki są wyższe na desktopie. Numeracja jest automatyczna.',
 			])
-			->addText('text', [
-				'label' => 'Tekst',
+			->addImage('image', [
+				'label' => 'Zdjęcie',
+				'return_format' => 'array',
+				'preview_size' => 'thumbnail',
 			])
-			->endRepeater()
-			->addRepeater('r_whyus_col2', [
-				'label' => 'Punkty - kolumna #2',
-				'layout' => 'table',
-				'min' => 1,
-				'button_label' => 'Dodaj punkt',
-			])
-			->addText('text', [
-				'label' => 'Tekst',
+			->addText('header', ['label' => 'Nagłówek'])
+			->addWysiwyg('text', [
+				'label' => 'Treść',
+				'tabs' => 'all',
+				'toolbar' => 'full',
+				'media_upload' => true,
 			])
 			->endRepeater()
 
@@ -118,10 +110,12 @@ class Whyus extends Block
 
 	public function with(): array
 	{
+		$group = get_field('g_whyus');
+		$rows = get_field('r_whyus');
+
 		$fields = [
-			'g_whyus'      => get_field('g_whyus'),
-			'r_whyus_col1' => get_field('r_whyus_col1'),
-			'r_whyus_col2' => get_field('r_whyus_col2'),
+			'g_whyus' => is_array($group) ? $group : [],
+			'r_whyus' => is_array($rows) ? array_values(array_filter($rows, 'is_array')) : [],
 
 			'section_id'    => get_field('section_id'),
 			'section_class' => get_field('section_class'),

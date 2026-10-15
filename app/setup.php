@@ -26,18 +26,19 @@ add_filter('block_editor_settings_all', function ($settings) {
 
 /*--- ACF BLOCK EXPANDED EDITOR ---*/
 
-add_filter('acf/register_block_type_args', function ($block) {
-	if (! str_starts_with($block['name'] ?? '', 'acf/')) {
-		return $block;
+// Cache ACF Composer rejestruje bloki z JSON, pomijając acf/register_block_type_args.
+add_filter('block_type_metadata', function ($metadata) {
+	if (empty($metadata['acf']) || ! str_starts_with($metadata['name'] ?? '', 'acf/')) {
+		return $metadata;
 	}
 
-	$block['acf_block_version'] = 3;
-	$block['api_version'] = 3;
-	$block['expanded_editor_buttons'] = true;
-	$block['hide_fields_in_sidebar'] = true;
-	$block['auto_inline_editing'] = false;
+	$metadata['apiVersion'] = 3;
+	$metadata['acf']['blockVersion'] = 3;
+	$metadata['acf']['expandedEditorButtons'] = true;
+	$metadata['acf']['hideFieldsInSidebar'] = true;
+	$metadata['acf']['autoInlineEditing'] = false;
 
-	return $block;
+	return $metadata;
 });
 
 /**
@@ -180,9 +181,9 @@ add_action('widgets_init', function () {
 	register_sidebar([
 		'name'          => __('Sklep - Filtry', 'sage'),
 		'id'            => 'sidebar-shop',
-		'before_widget' => '<section class="widget %1$s %2$s">',
+		'before_widget' => '<section class="widget border-b border-dashed border-primary mb-5 pb-5 %1$s %2$s">',
 		'after_widget'  => '</section>',
-		'before_title'  => '<p class="font-header text-h5 widget-title font-bold mb-4">',
+		'before_title'  => '<p class="font-header text-h5 widget-title font-bold !mt-5 !mb-1 first-of-type:!mt-0">',
 		'after_title'   => '</p>',
 	]);
 });

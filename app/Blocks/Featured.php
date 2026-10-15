@@ -33,18 +33,29 @@ class Featured extends Block
 			->addTab('Elementy', ['placement' => 'top'])
 			->addGroup('g_featured', ['label' => ''])
 			->addText('header', ['label' => 'Nagłówek'])
+			->addWysiwyg('text', [
+				'label' => 'Treść',
+				'tabs' => 'all',
+				'toolbar' => 'full',
+				'media_upload' => true,
+			])
+			->addText('badge', [
+				'label' => 'Etykieta produktów',
+				'default_value' => 'Bestseller',
+				'instructions' => 'Wspólna etykieta kafelków. Pozostaw puste, aby ją ukryć.',
+			])
 			->addRelationship('products', [
 				'label' => 'Produkty',
 				'post_type' => ['product'],
 				'filters' => ['search'],
 				'return_format' => 'object',
-				'max' => 6,
-				'instructions' => 'Wybierz i ułóż produkty w dowolnej kolejności (maks. 6). Jeśli pole jest puste, wyświetlą się produkty oznaczone w WooCommerce jako wyróżnione.',
+				'max' => 8,
+				'instructions' => 'Wybierz i ułóż produkty w dowolnej kolejności (maks. 8). Jeśli pole jest puste, wyświetlą się produkty oznaczone w WooCommerce jako wyróżnione.',
 			])
 			->addLink('button', [
 				'label' => 'Przycisk',
 				'return_format' => 'array',
-				'instructions' => 'Jeśli puste, użyty zostanie link do strony sklepu z domyślnym tekstem.',
+				'instructions' => 'Opcjonalny przycisk pod sliderem.',
 			])
 			->endGroup()
 
@@ -95,7 +106,9 @@ class Featured extends Block
 	public function with(): array
 	{
 		$g_featured = get_field('g_featured');
-		$selected = array_slice($g_featured['products'] ?? [], 0, 8);
+		$g_featured = is_array($g_featured) ? $g_featured : [];
+		$selected = $g_featured['products'] ?? [];
+		$selected = is_array($selected) ? array_slice($selected, 0, 8) : [];
 
 		if (empty($selected)) {
 			$featured_query = new \WP_Query([
@@ -124,15 +137,9 @@ class Featured extends Block
 
 			$thumb_id = $product->get_image_id();
 
-			// Dla produktów wariantowych (przedział cenowy) pokazujemy tylko najniższą cenę zamiast całego zakresu.
-			$price_html = $product->is_type('variable')
-				? wc_price($product->get_variation_price('min', true))
-				: $product->get_price_html();
-
 			$items[] = [
 				'title' => $product->get_name(),
 				'url' => get_permalink($product->get_id()),
-				'price_html' => $price_html,
 				'image' => [
 					'ID' => $thumb_id,
 					'alt' => $thumb_id ? get_post_meta($thumb_id, '_wp_attachment_image_alt', true) : '',
@@ -144,10 +151,7 @@ class Featured extends Block
 		$fields = [
 			'g_featured' => $g_featured,
 			'items' => $items,
-			'button' => !empty($g_featured['button']['url']) ? $g_featured['button'] : [
-				'url' => function_exists('wc_get_page_permalink') ? wc_get_page_permalink('shop') : home_url('/'),
-				'title' => 'Zobacz wszystkie produkty',
-			],
+			'button' => $g_featured['button'] ?? [],
 
 			'section_id' => get_field('section_id'),
 			'section_class' => get_field('section_class'),

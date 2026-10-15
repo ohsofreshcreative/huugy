@@ -70,8 +70,8 @@ public $supports = [
 				'ui_on_text' => 'Tak',
 				'ui_off_text' => 'Nie',
 			])
-			->addTrueFalse('stroke', [
-				'label' => 'Obramowanie obrazu',
+			->addTrueFalse('bgshape2', [
+				'label' => 'Kształt w tle #2',
 				'ui' => 1,
 				'ui_on_text' => 'Tak',
 				'ui_off_text' => 'Nie',
@@ -126,6 +126,7 @@ public $supports = [
 			'section_class' => get_field('section_class'),
 
 			'bgshape' => (bool) get_field('bgshape'),
+			'bgshape2' => (bool) get_field('bgshape2'),
 			'stroke' => (bool) get_field('stroke'),
 			'flip' => (bool) get_field('flip'),
 			'wide' => (bool) get_field('wide'),

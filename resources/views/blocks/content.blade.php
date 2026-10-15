@@ -9,8 +9,15 @@
 	$background => filled($background) && $background !== 'none',
 	])>
 
-	<div class="__wrapper c-main relative">
+	@if ($bgshape)
+	<img data-gsap-element="img" class="absolute -translate-y-1/2 -translate-x-1/2 opacity-20" src="{{ get_template_directory_uri() }}/resources/images/circle.svg">
+	@endif
 
+	@if ($bgshape2)
+	<img data-gsap-element="img" class="absolute right-1/12 top-1/2 -translate-y-1/2 translate-x-1/2 opacity-20" src="{{ get_template_directory_uri() }}/resources/images/shape-logo.svg">
+	@endif
+
+	<div class="__wrapper c-main">
 		<div class="__col grid grid-cols-1 lg:grid-cols-2 items-center gap-8 lg:gap-20">
 			<div class="__img order1 relative" data-gsap-element="img">
 				@if (!empty($g_content['image']))
@@ -19,9 +26,7 @@
 					:image="$g_content['image']"
 					:figureClass="'__img h-full' . ($stroke ? ' __img--stroke' : '')"
 					class="w-full object-cover max-h-[600px]" />
-				@if ($bgshape)
-				<span class="__shape" aria-hidden="true"></span>
-				@endif
+
 				@endif
 			</div>
 

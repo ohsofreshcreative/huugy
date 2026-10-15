@@ -8,7 +8,7 @@ use App\Support\SectionClasses;
 
 class Steps extends Block
 {
-	public $name = 'Kroki procesu (slider)';
+	public $name = 'Steps';
 	public $description = 'steps';
 	public $slug = 'steps';
 	public $category = 'formatting';
@@ -28,10 +28,17 @@ class Steps extends Block
 		$steps = new FieldsBuilder('steps');
 
 		$steps
-			->setLocation('block', '==', 'acf/steps') // ważne!
+			->setLocation('block', '==', 'acf/steps')
+			->addText('block-title', ['label' => 'Tytuł', 'required' => 0])
+			->addAccordion('accordion1', ['label' => 'Treści bloku', 'open' => 1])
 			/*--- TAB #1 ---*/
 			->addTab('Treści', ['placement' => 'top'])
 			->addGroup('g_steps', ['label' => ''])
+			->addImage('logo', [
+				'label' => 'Logo aktywnej zakładki',
+				'return_format' => 'array',
+				'preview_size' => 'thumbnail',
+			])
 			->addText('header', ['label' => 'Nagłówek'])
 			->addWysiwyg('text', [
 				'label' => 'Treść',
@@ -39,32 +46,34 @@ class Steps extends Block
 				'toolbar' => 'full',
 				'media_upload' => true,
 			])
-			->addTextarea('summary', [
-				'label' => 'Podsumowanie (ramka pod sliderem)',
-				'rows' => 3,
-				'new_lines' => 'br',
-			])
 			->endGroup()
 
 			/*--- TAB #2 ---*/
 			->addTab('Kroki', ['placement' => 'top'])
 			->addRepeater('r_steps', [
 				'label' => 'Kroki',
-				'layout' => 'table', // 'row', 'block', albo 'table'
-				'min' => 2,
+				'layout' => 'row', // 'row', 'block', albo 'table'
+				'min' => 1,
 				'button_label' => 'Dodaj krok',
 			])
 			->addText('number', [
 				'label' => 'Numer',
 			])
 			->addText('title', [
-				'label' => 'Nagłówek',
+				'label' => 'Nazwa zakładki',
 			])
+			->addText('header', ['label' => 'Nagłówek'])
 			->addWysiwyg('text', [
 				'label' => 'Treść',
 				'tabs' => 'all',
 				'toolbar' => 'full',
 				'media_upload' => true,
+			])
+			->addLink('button', ['label' => 'Przycisk', 'return_format' => 'array'])
+			->addImage('image', [
+				'label' => 'Zdjęcie',
+				'return_format' => 'array',
+				'preview_size' => 'medium',
 			])
 			->endRepeater()
 
@@ -114,9 +123,13 @@ class Steps extends Block
 
 	public function with(): array
 	{
+		$rows = get_field('r_steps');
+		$group = get_field('g_steps');
+
 		$fields = [
-			'g_steps' => get_field('g_steps'),
-			'r_steps' => get_field('r_steps'),
+			'g_steps' => is_array($group) ? $group : [],
+			'r_steps' => is_array($rows) ? array_values(array_filter($rows, 'is_array')) : [],
+			'tabs_id' => wp_unique_id('steps-'),
 
 			'section_id' => get_field('section_id'),
 			'section_class' => get_field('section_class'),

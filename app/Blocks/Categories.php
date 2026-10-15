@@ -8,7 +8,7 @@ use App\Support\SectionClasses;
 
 class Categories extends Block
 {
-	public $name = 'Kategorie';
+	public $name = 'Categories';
 	public $description = 'categories';
 	public $slug = 'categories';
 	public $category = 'formatting';
@@ -28,10 +28,13 @@ class Categories extends Block
 		$categories = new FieldsBuilder('categories');
 
 		$categories
-			->setLocation('block', '==', 'acf/categories') // ważne!
+			->setLocation('block', '==', 'acf/categories')
+			->addText('block-title', ['label' => 'Tytuł', 'required' => 0])
+			->addAccordion('accordion1', ['label' => 'Treści bloku', 'open' => 1])
 			/*--- TAB #1 ---*/
 			->addTab('Elementy', ['placement' => 'top'])
 			->addGroup('g_categories', ['label' => ''])
+			->addText('subtitle', ['label' => 'Podtytuł'])
 			->addText('header', ['label' => 'Nagłówek'])
 			->endGroup()
 
@@ -122,7 +125,7 @@ class Categories extends Block
 			'nomt' => (bool) get_field('nomt'),
 			'gap' => (bool) get_field('gap'),
 
-			'background' => get_field('background') ?: get_field('default_block_background', 'option') ?: 'none',
+			'background' => get_field('background') ?: 'none',
 		];
 
 		$fields['sectionClass'] = SectionClasses::fromMap($fields, [
@@ -140,6 +143,8 @@ class Categories extends Block
 	 */
 	public static function items(array $terms = []): array
 	{
+		$default_category_id = (int) get_option('default_product_cat', 0);
+
 		if (empty($terms)) {
 			$terms = get_terms([
 				'taxonomy' => 'product_cat',
@@ -155,11 +160,24 @@ class Categories extends Block
 
 		$items = [];
 		foreach ($terms as $term) {
+			if (!$term instanceof \WP_Term || $term->taxonomy !== 'product_cat') {
+				continue;
+			}
+
+			if ((int) $term->term_id === $default_category_id) {
+				continue;
+			}
+
+			$url = get_term_link($term);
+			if (is_wp_error($url)) {
+				continue;
+			}
+
 			$thumb_id = get_term_meta($term->term_id, 'thumbnail_id', true);
 
 			$items[] = [
 				'title' => $term->name,
-				'url' => get_term_link($term),
+				'url' => $url,
 				'image' => [
 					'ID' => $thumb_id ?: null,
 					'alt' => $thumb_id ? get_post_meta($thumb_id, '_wp_attachment_image_alt', true) : '',

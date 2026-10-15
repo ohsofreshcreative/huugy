@@ -3,7 +3,7 @@ use App\Walkers\DropdownWalker;
 use App\Walkers\MobileDropdownWalker;
 @endphp
 
-<header x-data="{ mobileOpen: false }" class="relative top-0 z-50 bg-white masthead fixed-top mx-0 -menu-">
+<header x-data="{ mobileOpen: false }" :data-mobile-open="mobileOpen" class="relative top-0 z-50 bg-white masthead fixed-top rounded-full mx-3 mt-2">
 
 	<!-- Desktop Header -->
 	<div class="items-center justify-between hidden h-full py-4 px-12 mx-auto lg:flex">
@@ -14,28 +14,29 @@ use App\Walkers\MobileDropdownWalker;
 			<span class="text-xl font-bold">{{ $siteName }}</span>
 			@endif
 		</a>
-		<div class="flex items-center gap-6">
+		<div class="flex items-center gap-6 self-stretch -my-4">
 			@if (has_nav_menu('primary_navigation'))
-			<nav class="ml-6 lg:ml-15 nav-primary w-full" aria-label="{{ wp_get_nav_menu_name('primary_navigation') }}">
+			<nav class="ml-6 lg:ml-15 nav-primary w-full h-full" aria-label="{{ wp_get_nav_menu_name('primary_navigation') }}">
 				{!! wp_nav_menu([
 				'theme_location' => 'primary_navigation',
-				'menu_class' => 'nav flex gap-x-3 lg:gap-x-6 text-lg font-medium justify-center items-center',
+				'menu_class' => 'nav flex h-full gap-x-3 lg:gap-x-6 text-lg font-medium justify-center items-center',
 				'container' => false,
 				'echo' => false,
 				'walker' => new DropdownWalker(),
+				'product_menu' => $product_menu,
 				]) !!}
 			</nav>
 			@endif
 
 
-			<a href="/kontakt/" class="block w-full btn btn-secondary">
+			<!-- <a href="/kontakt/" class="block w-full btn btn-secondary">
 				Kontakt
-			</a>
+			</a> -->
 		</div>
 
 			<div class="__action flex items-center gap-4">
 				@if (function_exists('wc_get_page_id'))
-				<a href="{{ get_permalink(wc_get_page_id('myaccount')) }}" class="hover:opacity-80 transition-opacity">
+				<a href="{{ wc_get_page_permalink('myaccount') }}" @if (!is_user_logged_in()) data-login-open aria-haspopup="dialog" aria-controls="login-modal" @endif class="hover:opacity-80 transition-opacity">
 					<img src="{{ get_template_directory_uri() }}/resources/images/user.svg" alt="Moje konto" />
 				</a>
 				@else
@@ -66,10 +67,15 @@ use App\Walkers\MobileDropdownWalker;
 			<span class="text-lg font-bold">{{ $siteName }}</span>
 			@endif
 		</a>
+    @if (function_exists('wc_get_page_permalink'))
+      <a href="{{ wc_get_page_permalink('myaccount') }}" @if (!is_user_logged_in()) data-login-open aria-haspopup="dialog" aria-controls="login-modal" @endif class="ml-auto p-2">
+        <img src="{{ get_template_directory_uri() }}/resources/images/user.svg" alt="Moje konto" />
+      </a>
+    @endif
 		<button
 			@click.stop="mobileOpen = !mobileOpen"
 			class="p-2 primary bg-white rounded-md"
-			aria-expanded="mobileOpen"
+			:aria-expanded="mobileOpen"
 			aria-controls="mobile-menu-panel">
 			<span class="sr-only">Otwórz menu główne</span>
 			<svg x-show="!mobileOpen" class="block w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
@@ -84,6 +90,7 @@ use App\Walkers\MobileDropdownWalker;
 	<!-- Mobile Menu Panel -->
 	<div
 		id="mobile-menu-panel"
+		x-cloak
 		x-show="mobileOpen"
 		@click.away="mobileOpen = false"
 		@keydown.escape.window="mobileOpen = false"
@@ -93,7 +100,7 @@ use App\Walkers\MobileDropdownWalker;
 		x-transition:leave="transition ease-in duration-150"
 		x-transition:leave-start="opacity-100 transform translate-x-0"
 		x-transition:leave-end="opacity-0 transform translate-x-full"
-		class="mobile-menu fixed top-0 right-0 bottom-0 w-full h-full bg-white shadow-xl z-[51] overflow-y-auto md:hidden"
+		class="mobile-menu fixed top-0 right-0 bottom-0 w-full h-full bg-white shadow-xl z-[51] overflow-y-auto lg:hidden"
 		aria-label="Menu mobilne">
 		<div class="p-4 relative z-10">
 			<div class="flex items-center justify-between mb-6">
@@ -116,15 +123,16 @@ use App\Walkers\MobileDropdownWalker;
 				'container' => false,
 				'echo' => false,
 				'walker' => new MobileDropdownWalker(),
+				'product_menu' => $product_menu,
 				]) !!}
 			</nav>
 			@endif
 
-			<div class="mt-8">
+		<!-- 	<div class="mt-8">
 				<a href="/kontakt/" class="block w-full btn btn-secondary">
 					Kontakt
 				</a>
-			</div>
+			</div> -->
 		</div>
 
 	</div>

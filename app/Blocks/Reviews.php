@@ -68,10 +68,12 @@ class Reviews extends Block
 
 	public function with(): array
 	{
+		$rows = get_field('r_reviews', 'option');
+
 		$fields = [
 			'header'    => get_field('header', 'option'),
 			'info'      => get_field('info', 'option'),
-			'r_reviews' => get_field('r_reviews', 'option') ?: [],
+			'r_reviews' => is_array($rows) ? array_values(array_filter($rows, 'is_array')) : [],
 
 			'section_id' => get_field('section_id'),
 			'section_class' => get_field('section_class'),

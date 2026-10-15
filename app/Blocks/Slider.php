@@ -8,12 +8,12 @@ use App\Support\SectionClasses;
 
 class Slider extends Block
 {
-    public $name = 'Slider - Oferta';
+    public $name = 'Slider';
     public $description = 'slider';
     public $slug = 'slider';
     public $category = 'formatting';
     public $icon = 'image-flip-horizontal';
-    public $keywords = ['slider', 'oferta'];
+    public $keywords = ['slider', 'kafelki'];
     public $mode = 'edit';
     public $supports = [
         'align' => false,
@@ -30,11 +30,6 @@ class Slider extends Block
 			/*--- GROUP ---*/
 			->addTab('Elementy', ['placement' => 'top'])
 			->addGroup('g_slider', ['label' => ''])
-			->addImage('image', [
-				'label' => 'Obraz',
-				'return_format' => 'array',
-				'preview_size' => 'thumbnail',
-			])
             ->addText('header', ['label' => 'Tytuł sekcji'])
 			->addWysiwyg('text', [
 				'label' => 'Treść',
@@ -42,14 +37,30 @@ class Slider extends Block
 				'toolbar' => 'full',
 				'media_upload' => true,
 			])
-            ->addRelationship('slider_offers', [
-                'label'         => 'Wpisy oferty (kolejność ma znaczenie)',
-                'post_type'     => ['offer'],
-                'filters'       => ['search'],
-                'return_format' => 'object',
-                'instructions'  => 'Wybierz i ułóż wpisy oferty w dowolnej kolejności. Jeśli pole jest puste, wyświetlą się wszystkie automatycznie.',
-            ])
 			->endGroup()
+
+			/*--- KAFELKI ---*/
+			->addTab('Kafelki', ['placement' => 'top'])
+			->addRepeater('r_slider', [
+				'label' => 'Kafelki',
+				'layout' => 'block',
+				'min' => 1,
+				'button_label' => 'Dodaj kafelek',
+			])
+			->addImage('image', [
+				'label' => 'Obraz tła',
+				'return_format' => 'array',
+				'preview_size' => 'medium',
+			])
+			->addText('header', [
+				'label' => 'Nagłówek',
+			])
+			->addTextarea('text', [
+				'label' => 'Tekst',
+				'rows' => 3,
+				'new_lines' => 'br',
+			])
+			->endRepeater()
 
 			/*--- USTAWIENIA BLOKU ---*/
 
@@ -81,33 +92,16 @@ class Slider extends Block
 
     public function with(): array
     {
-        $selected = get_field('slider_offers') ?: [];
-
-        if (empty($selected)) {
-            $offers_query = new \WP_Query([
-                'post_type'      => 'offer',
-                'post_parent'    => 0,
-                'posts_per_page' => -1,
-                'orderby'        => 'menu_order',
-                'order'          => 'ASC',
-                'post_status'    => 'publish',
-            ]);
-            $selected = $offers_query->posts;
-            wp_reset_postdata();
-        }
+        $rows = get_field('r_slider') ?: [];
 
         $slides = [];
-        foreach ($selected as $post) {
-            $thumb_id = get_post_thumbnail_id($post->ID);
-            $icon     = get_field('offer_icon', $post->ID);
+        foreach ($rows as $row) {
+            $image = $row['image'] ?? null;
             $slides[] = [
-                'title'     => $post->post_title,
-                'excerpt'   => get_the_excerpt($post),
-                'url'       => get_permalink($post->ID),
-                'image_url' => $thumb_id ? wp_get_attachment_image_url($thumb_id, 'large') : null,
-                'image_alt' => $thumb_id ? get_post_meta($thumb_id, '_wp_attachment_image_alt', true) : '',
-                'icon_url'  => $icon['url'] ?? null,
-                'icon_alt'  => $icon['alt'] ?? '',
+                'header'    => $row['header'] ?? '',
+                'text'      => $row['text'] ?? '',
+                'image_url' => $image['url'] ?? null,
+                'image_alt' => $image['alt'] ?? '',
             ];
         }
 

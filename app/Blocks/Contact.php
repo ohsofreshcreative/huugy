@@ -52,6 +52,16 @@ class Contact extends Block
 			->addText('mail', [
 				'label' => 'Adres e-mail',
 			])
+			->addWysiwyg('address', [
+				'label' => 'Adres',
+				'tabs' => 'all',
+				'toolbar' => 'full',
+				'media_upload' => false,
+			])
+			->addText('hours_header', [
+				'label' => 'Nagłówek godzin otwarcia',
+				'default_value' => 'Godziny otwarcia:',
+			])
 			->addWysiwyg('hours', [
 				'label' => 'Godziny otwarcia',
 				'tabs' => 'all',

@@ -7,7 +7,7 @@ defined('ABSPATH') || exit;
 
 	@php do_action('woocommerce_before_cart_totals'); @endphp
 
-	<h2 class="text-[22px] font-bold text-slate-900 mb-5 pb-3 border-b-2 border-slate-200">{{ esc_html__('Cart totals', 'woocommerce') }}</h2>
+	<h2 class="text-[22px] font-bold text-slate-900 pb-3">{{ esc_html__('Cart totals', 'woocommerce') }}</h2>
 
 	<table cellspacing="0" class="shop_table shop_table_responsive w-full border-collapse">
 

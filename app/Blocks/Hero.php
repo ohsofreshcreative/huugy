@@ -69,6 +69,12 @@ public $supports = [
 				'ui_on_text' => 'Tak',
 				'ui_off_text' => 'Nie',
 			])
+			->addImage('bgshape_image', [
+				'label' => 'Grafika kształtu w tle',
+				'return_format' => 'array',
+				'preview_size' => 'thumbnail',
+				'conditional_logic' => [[['field' => 'bgshape', 'operator' => '==', 'value' => '1']]],
+			])
 			->addTrueFalse('nolist', [
 				'label' => 'Brak punktatorów',
 				'ui' => 1,
@@ -119,6 +125,7 @@ public $supports = [
 			'section_class' => get_field('section_class'),
 
 			'bgshape' => (bool) get_field('bgshape'),
+			'bgshape_image' => get_field('bgshape_image'),
 			'flip' => (bool) get_field('flip'),
 			'wide' => (bool) get_field('wide'),
 			'nomt' => (bool) get_field('nomt'),

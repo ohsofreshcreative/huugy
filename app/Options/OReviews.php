@@ -43,13 +43,20 @@ class Oreviews extends Options
 				'step' => 1,
 				'default_value' => 5,
 			])
-			->addTextarea('txt', [
+			->addWysiwyg('txt', [
 				'label'     => 'Treść opinii',
-				'rows'      => 4,
-				'new_lines' => 'br',
+				'tabs' => 'all',
+				'toolbar' => 'full',
+				'media_upload' => true,
 			])
 			->addImage('image', [
-				'label' => 'Obraz',
+				'label' => 'Zdjęcie autora',
+				'return_format' => 'array',
+				'preview_size' => 'thumbnail',
+			])
+			->addText('position', ['label' => 'Stanowisko / firma'])
+			->addImage('project_image', [
+				'label' => 'Zdjęcie realizacji',
 				'return_format' => 'array',
 				'preview_size' => 'thumbnail',
 			])

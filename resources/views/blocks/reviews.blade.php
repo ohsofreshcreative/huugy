@@ -2,89 +2,76 @@
 
 <section
 	data-gsap-anim="section"
-	@if(!empty($section_id)) id="{{ $section_id }}" @endif
+	@if (!empty($section_id)) id="{{ $section_id }}" @endif
 	@class([ 'b-reviews relative -smt' ,
 	$sectionClass=> filled($sectionClass),
 	$section_class => filled($section_class),
 	$background => filled($background) && $background !== 'none',
 	])>
-	<div class="__wrapper c-main">
-		<div class="__content">
-			@if(!empty($header))
-			<div data-gsap-element="header" class="__wrapper block w-full md:w-1/2">
-				<h3 class="">{{ $header }}</h3>
-				<div class="__info flex gap-4 mt-4">
-					{!! $info !!}
-					<img src="{{ get_template_directory_uri() }}/resources/images/google-logo.svg" class="" />
-				</div>
+	<div class="__wrapper c-main flex flex-col gap-10">
+		<div class="__top flex flex-wrap items-center justify-between gap-6">
+			@if (!empty($header))
+			<h2 data-gsap-element="header">{{ $header }}</h2>
+			@endif
+			@if (count($r_reviews) > 1)
+			<div class="flex gap-4">
+				<x-button tag="button" type="button" class="__prev w-12! h-12! p-0! inline-flex! items-center justify-center disabled:opacity-40" aria-label="Poprzednia opinia">
+					<x-icon.arrow-up class="rotate-90" />
+				</x-button>
+				<x-button tag="button" type="button" class="__next w-12! h-12! p-0! inline-flex! items-center justify-center disabled:opacity-40" aria-label="Następna opinia">
+					<x-icon.arrow-up class="-rotate-90" />
+				</x-button>
 			</div>
 			@endif
+		</div>
+		@if (!empty($info))
+		<div class="__info">{!! $info !!}</div>
+		@endif
 
-			<div class="swiper reviews-swiper !overflow-visible">
-				<div data-gsap-element="swiper" class="swiper-wrapper">
-					@foreach($r_reviews as $card)
-					<div class="swiper-slide">
-						<div class="__card relative bg-white h-full">
-
-							<div class="relative z-10 flex flex-col gap-4 h-full pt-16 p-8 mt-6">
-								@if(!empty($card['txt']))
-								<div class="review-content-wrapper">
-									<div class="flex items-center gap-4">
-										<img src="{{ $card['image']['url'] }}" alt="{{ $card['image']['alt'] ?? '' }}" class="w-10 h-10 rounded-full object-cover" />
-										<p class="text-h7 block">{{ $card['name'] }}</p>
-
-										<img src="{{ get_template_directory_uri() }}/resources/images/google.svg" class="w-6 h-6 ml-auto" />
-									</div>
-									<div class="flex items-center gap-1 text-yellow-400 text-2xl mb-1">
-										@for ($i = 1; $i <= 5; $i++)
-											<span>{{ $i <= (int) ($card['rating'] ?? 5) ? '★' : '☆' }}</span>
-											@endfor
-									</div>
-									<div class="__txt mt-4 line-clamp-6">{!! $card['txt'] !!}</div>
-									<button class="btn-more hidden underline text-primary mt-2 cursor-pointer">Zobacz całość</button>
+		@if (!empty($r_reviews))
+		<div class="swiper reviews-swiper w-full min-w-0">
+			<div class="swiper-wrapper">
+				@foreach ($r_reviews as $card)
+				<div class="swiper-slide h-auto!">
+					<div class="grid grid-cols-1 lg:grid-cols-3 gap-8 h-full">
+						@if (!empty($card['project_image']))
+						<div class="__img relative aspect-square lg:aspect-auto">
+							<x-picture :image="$card['project_image']" figureClass="absolute inset-0" class="absolute inset-0 w-full h-full object-cover radius" loading="lazy" />
+						</div>
+						@endif
+						<div @class([ '__card relative isolate text-primary-light p-8 flex flex-col justify-between gap-16 min-h-[400px]' , '__card-avatar'=> !empty($card['image']),
+							'bg-primary radius' => empty($card['image']),
+							'lg:col-span-2' => !empty($card['project_image']),
+							'lg:col-span-3' => empty($card['project_image']),
+							])>
+							@if (!empty($card['image']))
+							<span class="__corner" aria-hidden="true"></span>
+							@endif
+							@if (!empty($card['txt']))
+							<blockquote class="__txt text-xl">{!! $card['txt'] !!}</blockquote>
+							@endif
+							<div @class(['flex items-end justify-between gap-6', 'pr-28'=> !empty($card['image'])])>
+								<div class="__author flex flex-col gap-3">
+									@if (!empty($card['name']))
+									<p>{{ $card['name'] }}</p>
+									@endif
+									@if (!empty($card['position']))
+									<p>{{ $card['position'] }}</p>
+									@endif
 								</div>
+								@if (!empty($card['image']))
+								<x-picture :image="$card['image']" figureClass="absolute bottom-0 right-0 w-24" class="w-24 h-24 object-cover radius" loading="lazy" />
 								@endif
 							</div>
 						</div>
 					</div>
-					@endforeach
 				</div>
-
-				<div data-gsap-element="arrows" class="w-full z-10 flex flex-row items-center pointer-events-none gap-4 mt-16">
-					<div class="__prev bg-primary h-14 w-14 flex items-center justify-center pointer-events-auto cursor-pointer transition-all duration-400 shrink-0">
-						<svg xmlns="http://www.w3.org/2000/svg" width="13" height="12" viewBox="0 0 13 12" fill="none">
-							<path d="M0.270429 5.31498C0.270706 5.31469 0.270937 5.31435 0.27126 5.31406L5.08882 0.281803C5.44973 -0.0951806 6.03348 -0.0937777 6.39273 0.285093C6.75194 0.663916 6.75055 1.27664 6.38964 1.65367L3.15514 5.03226L12.078 5.03226C12.5872 5.03226 13 5.46552 13 6C13 6.53448 12.5872 6.96774 12.078 6.96774L3.15518 6.96774L6.3896 10.3463C6.75051 10.7234 6.75189 11.3361 6.39269 11.7149C6.03344 12.0938 5.44963 12.0951 5.08877 11.7182L0.271213 6.68594C0.270936 6.68565 0.270706 6.68531 0.270383 6.68502C-0.0907122 6.30673 -0.08956 5.69202 0.270429 5.31498Z" fill="#FFF" />
-						</svg>
-					</div>
-					<div class="__next bg-primary h-14 w-14 flex items-center justify-center pointer-events-auto cursor-pointer transition-all duration-300 shrink-0">
-						<svg xmlns="http://www.w3.org/2000/svg" width="13" height="12" viewBox="0 0 13 12" fill="none">
-							<path d="M12.7296 5.31498C12.7293 5.31469 12.7291 5.31435 12.7287 5.31406L7.91118 0.281803C7.55027 -0.0951806 6.96652 -0.0937777 6.60727 0.285093C6.24806 0.663916 6.24945 1.27664 6.61036 1.65367L9.84486 5.03226L0.921985 5.03226C0.412773 5.03226 0 5.46552 0 6C0 6.53448 0.412773 6.96774 0.921985 6.96774L9.84482 6.96774L6.6104 10.3463C6.24949 10.7234 6.24811 11.3361 6.60731 11.7149C6.96657 12.0938 7.55037 12.0951 7.91123 11.7182L12.7288 6.68594C12.7291 6.68565 12.7293 6.68531 12.7296 6.68502C13.0907 6.30673 13.0896 5.69202 12.7296 5.31498Z" fill="#FFF" />
-						</svg>
-					</div>
-				</div>
-
-			</div>
-
-			<!-- <div class="mt-10">
-				<img src="/wp-content/uploads/2025/12/google-1.svg" />
-				<a class="!underline">Sprawdź wszystkie opinie</a>
-			</div> -->
-		</div>
-	</div>
-	<div id="review-popup" class="review-popup fixed inset-0 bg-black/50 bg-opacity-70 z-[999] flex items-center justify-center p-4 hidden">
-		<div class="review-popup__content bg-white rounded-lg shadow-xl p-8 md:p-12 max-w-3xl w-full relative">
-			<button class="review-popup__close absolute top-4 right-4 text-gray-500 hover:text-gray-800 transition-colors">
-				<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-				</svg>
-			</button>
-			<div id="review-popup-text" class="prose max-w-none mb-4">
-			</div>
-			<div class="flex items-center gap-4">
-				<img src="/wp-content/uploads/2026/01/stars.svg" class="h-5" />
-				<b id="review-popup-author" class="font-header text-xl">
-				</b>
+				@endforeach
 			</div>
 		</div>
+		@if (count($r_reviews) > 1)
+		<div class="__pagination swiper-pagination static!" aria-label="Paginacja opinii"></div>
+		@endif
+		@endif
 	</div>
 </section>

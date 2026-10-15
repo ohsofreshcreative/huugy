@@ -27,7 +27,7 @@ class ProductTabs extends Field
 			->addFlexibleContent('product_tabs', [
 				'label' => 'Zakładki produktu',
 				'button_label' => 'Dodaj zakładkę',
-				'instructions' => 'Kolejność zakładek na stronie produktu odpowiada kolejności tutaj. Zakładka "Opis produktu" pojawia się zawsze jako pierwsza (i tylko wtedy, gdy produkt ma wypełniony długi opis).',
+				'instructions' => 'Kolejność zakładek na stronie produktu odpowiada kolejności tutaj. Główny opis produktu jest wyświetlany osobno, obok dokumentacji technicznej.',
 			])
 			->addLayout('text', ['label' => 'Tekst'])
 			->addText('tab_title', ['label' => 'Nazwa zakładki', 'required' => 1])

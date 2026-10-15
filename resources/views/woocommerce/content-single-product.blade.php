@@ -5,12 +5,29 @@
 */
 defined('ABSPATH') || exit;
 
+$current_product = wc_get_product(get_the_ID());
+if (!$current_product instanceof \WC_Product) {
+return;
+}
+
+
 // Pobranie wartości z opcji ACF
 $g_values = get_field('g_values', 'option');
 $r_values = get_field('r_values', 'option');
 
 // FAQ produktu (nad sekcją powiązanych produktów, sama sekcja related jest usunięta)
 $product_faq = get_field('product_faq') ?: [];
+
+$product_description = $current_product->get_description();
+$product_documentation = array_values(array_filter(
+get_field('product_documentation', $current_product->get_id()) ?: [],
+fn ($document) => !empty($document['title']) && !empty($document['file']['url'])
+));
+$configurator_layers = \App\product_configurator_layers($current_product);
+$product_gallery = array_map(fn ($image_id) => [
+'ID' => $image_id,
+'alt' => get_post_meta($image_id, '_wp_attachment_image_alt', true),
+], $current_product->get_gallery_image_ids());
 
 // Akcje wywoływane przed strukturą produktu
 if (post_password_required()) {
@@ -19,11 +36,15 @@ return;
 }
 @endphp
 
-<div id="product-{{ the_ID() }}" {{ wc_product_class('', $product) }}>
+<div id="product-{{ the_ID() }}" {{ wc_product_class('', $current_product) }}>
 
 	<div class="__product grid grid-cols-1 lg:grid-cols-2 gap-10">
 
-		<div class="">
+		<div class="min-w-0">
+			@if (!empty($configurator_layers))
+			@include('partials.product-configurator', ['layers' => $configurator_layers, 'product' => $current_product])
+			@endif
+
 			@php
 			/**
 			* Hook: woocommerce_before_single_product_summary.
@@ -57,7 +78,9 @@ return;
 
 	</div>
 
-	<div class="w-full mt-16 pt-16 border-t border-gray-100 !float-none !clear-both">
+	@include('partials.product-details')
+
+	<div class="w-full bg-white">
 		@php
 		/**
 		* Hook: woocommerce_after_single_product_summary.
@@ -70,21 +93,24 @@ return;
 	</div>
 
 	@if (!empty($product_faq))
-	<section class="b-faq relative left-1/2 w-screen -translate-x-1/2 bg-white -smt section-py">
+	<section class="b-faq relative -smt">
 		<div class="__wrapper c-main">
-			<h6>Najczęściej zadawane pytania</h6>
-			<div class="tabs-wrapper flex flex-col mt-4">
+			<div class="__top text-center">
+				<p>FAQ</p>
+				<p class="text-h5">Najczęściej zadawane pytania</p>
+			</div>
+			<div class="tabs-wrapper flex flex-col mt-8">
 				@foreach ($product_faq as $item)
-				<div class="tabs bg-white border border-secondary-100 rounded-xl h-max">
+				<div class="tabs bg-white border border-primary-light rounded-xl h-max">
 					<input class="tab-check" type="checkbox" name="radio-product-faq" id="product-faq-check{{ $loop->index }}">
 					<label class="tabs-label flex items-center justify-between" for="product-faq-check{{ $loop->index }}">
 						<div class="flex items-center gap-4">
-							<p class="!text-lg !font-semibold font-header">{{ $item['question'] }}</p>
+							<p class="!text-lg font-header">{{ $item['question'] }}</p>
 						</div>
 
 						<span class="__icon" aria-hidden="true">
-							<span class="__plus text-secondary">+</span>
-							<span class="__minus text-secondary">−</span>
+							<span class="__plus text-primary">+</span>
+							<span class="__minus text-primary">−</span>
 						</span>
 					</label>
 
@@ -101,3 +127,14 @@ return;
 </div>
 
 @php do_action('woocommerce_after_single_product'); @endphp
+
+<!-- cta -->
+@php
+$g_octa = get_field('g_octa', 'option');
+$form = false;
+$sectionClass = '-smt';
+$section_id = '';
+$section_class = 'bg-white left-1/2 w-screen -translate-x-1/2 section-py';
+$background = 'none';
+@endphp
+@include('blocks.cta')

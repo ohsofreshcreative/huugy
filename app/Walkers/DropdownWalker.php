@@ -6,6 +6,28 @@ use Walker_Nav_Menu;
 
 class DropdownWalker extends Walker_Nav_Menu
 {
+	public function display_element($element, &$children_elements, $max_depth, $depth, $args, &$output)
+	{
+		$menu = $args[0]->product_menu ?? [];
+		$isShop = $element && ($element->object ?? '') === 'page'
+			&& !empty($menu['shop_id']) && (int) $element->object_id === $menu['shop_id'];
+		$isMegamenu = $element && in_array('product-megamenu', (array) ($element->classes ?? []), true);
+
+		if ((int) $depth === 0 && !empty($menu['categories']) && ($isShop || $isMegamenu)) {
+			// Przetwórz stare dzieci, aby walker nie wyrenderował ich ponownie jako sierot.
+			$discarded = '';
+			parent::display_element($element, $children_elements, $max_depth, $depth, $args, $discarded);
+			$output .= \Roots\view('partials.product-menu', [
+				'menu_item' => $element,
+				'product_menu' => $menu,
+				'mobile' => false,
+			])->render();
+			return;
+		}
+
+		parent::display_element($element, $children_elements, $max_depth, $depth, $args, $output);
+	}
+
     /**
      * Starts the list before the elements are added.
      */

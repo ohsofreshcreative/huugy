@@ -6,6 +6,9 @@
 $term = get_queried_object();
 $categories = get_categories();
 
+$default_category_id = (int) get_option('default_category');
+usort($categories, fn ($a, $b) => ($b->term_id === $default_category_id) - ($a->term_id === $default_category_id));
+
 $category_header = get_field('category_header', $term);
 $category_description = get_field('category_description', $term);
 $category_image = get_field('category_image', $term);
@@ -26,7 +29,7 @@ $sectionClass .= $flip ? ' order-flip' : '';
 $unique_id = 'clip_'.uniqid();
 @endphp
 
-<div class="hero category-header relative bg-secondary-700">
+<div class="hero category-header relative bg-gradient -spt">
 	<div class="__wrapper c-main relative z-10">
 		@if (function_exists('yoast_breadcrumb'))
 		<div data-gsap-element="bread" class="__breadcrumb text-primary [&_#breadcrumbs]:flex-wrap [&_a]:text-white">
@@ -34,75 +37,57 @@ $unique_id = 'clip_'.uniqid();
 		</div>
 		@endif
 		<div class="__wrapper pt-10 pb-20">
-			<div class="__content w-full md:w-2/3">
-				<h2 class="text-white m-header">
+			<div class="__content w-full md:w-1/2">
+				<h2 class="text-h4 text-secondary">
 					{!! $category_header ?: get_the_archive_title() !!}
 				</h2>
 				@if ($category_description)
-				<div class="text-white text-xl">
+				<div class="text-white m-header">
 					{!! $category_description !!}
 				</div>
 				@endif
 			</div>
-
-			<form role="search" method="get" class="__search relative mt-6 max-w-sm" action="{{ home_url('/') }}">
-				<label class="sr-only" for="blog-search">
-					{{ _x('Szukaj', 'label', 'sage') }}
-				</label>
-				<input
-					type="search"
-					id="blog-search"
-					name="s"
-					value="{{ get_search_query() }}"
-					placeholder="Szukaj wpisów…"
-					class="w-full bg-white px-4 py-2 pr-12 text-sm"
-				>
-				<input type="hidden" name="post_type" value="post">
-				<button type="submit" class="absolute right-2 top-1/2 -translate-y-1/2 p-2">
-					<span class="sr-only">{{ _x('Szukaj', 'submit button', 'sage') }}</span>
-					<svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-						<circle cx="11" cy="11" r="7"></circle>
-						<line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-					</svg>
-				</button>
-			</form>
-
-			<div id="category-tabs" class="category-tabs z-20 relative mt-4">
-				<div class="flex flex-wrap gap-2 items-center">
-					<div class="flex flex-wrap gap-2 items-center !text-[14px] tracking-wide">
-						<a href="/category/baza-wiedzy" @class(['__tab flex-shrink-0 block px-4 py-2', 'bg-primary'=> is_category('baza-wiedzy'), 'bg-white' => !is_category('baza-wiedzy')])>Baza wiedzy</a>
-						@foreach($categories as $category)
-						@if($category->name !== 'Baza wiedzy')
-						@php $isActive = $term && $term->term_id === $category->term_id; @endphp
-						<a href="{{ get_category_link($category->term_id) }}" @class(['__tab flex-shrink-0 block px-4 py-2', 'bg-primary'=> $isActive, 'bg-white' => !$isActive])>{{ $category->name }}</a>
-						@endif
-						@endforeach
-					</div>
-				</div>
-			</div>
 		</div>
 	</div>
+</div>
 
-	<div class="__decor pointer-events-none absolute inset-0 z-20 hidden lg:block" aria-hidden="true">
-		<span class="absolute top-0 left-[67%] size-[64px] bg-white"></span>
-		<span class="absolute top-[20%] right-[5.5%] size-[64px] bg-secondary-300"></span>
-		<span class="absolute top-[46%] left-[56.5%] size-[64px] bg-primary"></span>
-		<span class="absolute right-[2.5%] bottom-0 size-[64px] bg-primary-100"></span>
-		<span class="absolute top-[170px] left-1/2 size-[64px] bg-secondary-700"></span>
+<div id="category-tabs" class="category-tabs c-main z-20 relative -smt">
+	<div class="flex flex-wrap gap-2 items-center">
+		<div class="flex flex-wrap gap-2 items-center !font-medium tracking-wide">
+			@foreach($categories as $category)
+			@if($category->name !== 'Baza wiedzy')
+			@php $isActive = $term && $term->term_id === $category->term_id; @endphp
+			<a
+				href="{{ get_category_link($category->term_id) }}"
+				@if($isActive) aria-current="page" @endif
+				@class(['__tab relative flex-shrink-0 block rounded-3xl px-8 py-4', 'bg-primary !text-white'=> $isActive, 'bg-white !text-primary' => !$isActive])>
+				<span @class([
+					'pointer-events-none bg-primary border-5 border-white absolute -top-4 left-0 rounded-full p-[6px] transition-all duration-300 ease-out motion-reduce:transition-none',
+					'opacity-100 scale-100' => $isActive,
+					'opacity-0 scale-75' => !$isActive,
+				]) aria-hidden="true">
+					<img src="http://huugy.local/wp-content/uploads/2026/09/hu.svg" alt="" class="w-3 h-3 object-contain" />
+				</span>
+				{{ $category->name }}
+			</a>
+			@endif
+			@endforeach
+		</div>
 	</div>
 </div>
 
 @if (have_posts())
+@php $loop_index = 0; @endphp
 <div class="__posts c-main !mt-10 posts grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+
 	@while (have_posts())
 	@php
 	the_post();
+	$featured = !is_paged() && $loop_index === 0;
 	@endphp
 
-	@includeFirst([
-	'partials.content-' . get_post_type(),
-	'partials.content',
-	])
+	@include('partials.category-post', ['featured' => $featured])
+	@php $loop_index++; @endphp
 	@endwhile
 </div>
 

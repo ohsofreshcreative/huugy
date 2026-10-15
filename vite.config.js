@@ -6,12 +6,12 @@ import path from 'path'
 
 export default defineConfig(({ command, mode }) => {
   const env = loadEnv(mode, process.cwd(), '')
-  const wpOrigin = env.WP_HOME || 'http://geveko.local'
+  const wpOrigin = env.WP_HOME || 'http://huugy.local'
 
   return {
     server: {
-      host: 'geveko.local',
-      port: 5981,
+      host: 'huugy.local',
+      port: 6002,
       strictPort: true,
       cors: true,
       proxy: {
@@ -22,13 +22,13 @@ export default defineConfig(({ command, mode }) => {
       },
       hmr: {
         protocol: 'ws',
-        host: 'geveko.local',
-        port: 5981,
+        host: 'huugy.local',
+        port: 6002,
       },
     },
 
     base: command === 'build'
-      ? '/wp-content/themes/geveko/public/build/'
+      ? '/wp-content/themes/huugy/public/build/'
       : '/build/',
 
     plugins: [

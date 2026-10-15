@@ -2,6 +2,7 @@
 
 namespace App\Blocks;
 
+use App\Support\SectionClasses;
 use Log1x\AcfComposer\Block;
 use StoutLogic\AcfBuilder\FieldsBuilder;
 
@@ -25,16 +26,17 @@ class Posts extends Block
 		$posts = new FieldsBuilder('posts');
 
 		$posts
-			->setLocation('block', '==', 'acf/posts') // ważne!
+			->setLocation('block', '==', 'acf/posts')
 			/*--- FIELDS ---*/
 			->addTab('Treści', ['placement' => 'top'])
 			->addGroup('posts_settings', ['label' => ''])
 
 			->addText('title', ['label' => 'Tytuł'])
-			->addTextarea('text', [
+			->addWysiwyg('text', [
 				'label' => 'Opis',
-				'rows' => 2,
-				'new_lines' => 'br',
+				'tabs' => 'all',
+				'toolbar' => 'full',
+				'media_upload' => true,
 			])
 
 			->addLink('button', [
@@ -93,67 +95,68 @@ class Posts extends Block
 				'ui_on_text' => 'Tak',
 				'ui_off_text' => 'Nie',
 			])
-			->addTrueFalse('lightbg', [
-				'label' => 'Jasne tło',
-				'ui' => 1,
-				'ui_on_text' => 'Tak',
-				'ui_off_text' => 'Nie',
-			])
-			->addTrueFalse('graybg', [
-				'label' => 'Szare tło',
-				'ui' => 1,
-				'ui_on_text' => 'Tak',
-				'ui_off_text' => 'Nie',
-			])
-			->addTrueFalse('whitebg', [
-				'label' => 'Białe tło',
-				'ui' => 1,
-				'ui_on_text' => 'Tak',
-				'ui_off_text' => 'Nie',
-			])
-			->addTrueFalse('brandbg', [
-				'label' => 'Tło marki',
-				'ui' => 1,
-				'ui_on_text' => 'Tak',
-				'ui_off_text' => 'Nie',
+			->addSelect('background', [
+				'label' => 'Kolor tła',
+				'choices' => SectionClasses::backgroundChoices(),
+				'default_value' => 'none',
 			]);
 
 		return $posts;
 	}
 
-	public function with()
+	public function with(): array
 	{
-		$posts_settings = get_field('posts_settings');
-		$show_image = $posts_settings['show_image'] ?? true;
-		$show_excerpt = $posts_settings['show_excerpt'] ?? false;
-
-		// Get posts from the selected category
-		$args = [
+		$settings = get_field('posts_settings');
+		$settings = is_array($settings) ? $settings : [];
+		$query = new \WP_Query([
 			'post_type' => 'post',
-			'posts_per_page' => 6,
+			'posts_per_page' => 3,
 			'post_status' => 'publish',
 			'orderby' => 'date',
 			'order' => 'DESC',
-		];
+			'ignore_sticky_posts' => true,
+			'no_found_rows' => true,
+		]);
 
-		$query = new \WP_Query($args);
-		$posts = $query->posts;
+		$items = [];
+		foreach ($query->posts as $post) {
+			$categories = get_the_category($post->ID);
+			$items[] = [
+				'title' => get_the_title($post),
+				'url' => get_permalink($post),
+				'image' => get_post_thumbnail_id($post),
+				'category' => $categories[0]->name ?? '',
+				'date' => get_the_date('d.m.Y', $post),
+				'datetime' => get_the_date('c', $post),
+				'excerpt' => get_the_excerpt($post),
+			];
+		}
 
-		return [
-			'posts_settings' => get_field('posts_settings'),
-			'posts' => $posts,
-			'show_image' => $show_image,
-			'show_excerpt' => $show_excerpt,
+		$blog_id = (int) get_option('page_for_posts');
+		$fields = [
+			'posts_settings' => $settings,
+			'items' => $items,
+			'button' => !empty($settings['button']['url']) ? $settings['button'] : ($blog_id ? [
+				'url' => get_permalink($blog_id),
+				'title' => 'Sprawdź naszego bloga!',
+			] : []),
+			'show_image' => (bool) ($settings['show_image'] ?? true),
+			'show_excerpt' => (bool) ($settings['show_excerpt'] ?? false),
 			'section_id' => get_field('section_id'),
 			'section_class' => get_field('section_class'),
-			'flip' => get_field('flip'),
-			'wide' => get_field('wide'),
-			'nomt' => get_field('nomt'),
-			'gap' => get_field('gap'),
-			'lightbg' => get_field('lightbg'),
-			'graybg' => get_field('graybg'),
-			'whitebg' => get_field('whitebg'),
-			'brandbg' => get_field('brandbg'),
+			'wide' => (bool) get_field('wide'),
+			'flip' => (bool) get_field('flip'),
+			'nomt' => (bool) get_field('nomt'),
+			'gap' => (bool) get_field('gap'),
+			'background' => get_field('background') ?: get_field('default_block_background', 'option') ?: 'none',
 		];
+		$fields['sectionClass'] = SectionClasses::fromMap($fields, [
+			'wide' => 'wide',
+			'flip' => 'order-flip',
+			'nomt' => '!mt-0',
+			'gap' => 'wider-gap',
+		]);
+
+		return $fields;
 	}
 }

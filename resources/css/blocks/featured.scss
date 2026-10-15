@@ -1,5 +1,10 @@
 .b-featured {
-	.__card:hover .btn-underline::after {
-		margin-left: 12px;
-	}
+  --swiper-pagination-color: var(--color-primary-dark);
+  --swiper-pagination-bullet-inactive-color: transparent;
+  --swiper-pagination-bullet-inactive-opacity: 1;
+  --swiper-pagination-bullet-size: 14px;
+
+  .swiper-pagination-bullet {
+    border: 1px solid var(--color-primary-dark);
+  }
 }
