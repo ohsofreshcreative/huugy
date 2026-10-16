@@ -1,5 +1,5 @@
 @if (!empty($product_description) || !empty($product_documentation) || !empty($product_gallery))
-<section class="product-details relative left-1/2 w-screen -translate-x-1/2 overflow-hidden -smt -spt -spb bg-background-light" data-gsap-anim="section">
+<section class="product-details relative left-1/2 w-screen -translate-x-1/2 overflow-hidden -smt -spt -spb bg-white/50" data-gsap-anim="section">
 	<div class="__wrapper c-main">
 		@if (!empty($product_description) || !empty($product_documentation))
 		<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-10 items-start">

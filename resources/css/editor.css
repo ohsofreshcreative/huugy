@@ -192,7 +192,7 @@
  * na sekcji (SectionClasses::fromMap). Łapiemy to przez :has(), więc znacznik
  * pojawia się automatycznie, bez zmian w blokach czy widokach.
  */
-.editor-styles-wrapper .block-editor-block-list__block[data-type^="acf/"]:has([data-gsap-anim="section"].\!mt-0)::after {
+.editor-styles-wrapper .block-editor-block-list__block[data-type^="acf/"]:is(:has([data-gsap-anim="section"].\!mt-0), :has([data-acf-nomt]))::after {
 	content: "Brak marginesu górnego";
 	position: absolute;
 	inset: 8px 8px auto auto; /* jawnie wszystkie krawędzie — Gutenberg ma własne ::after z inset: 0 na .is-selected, samo top/right by się z tym zlało po zaznaczeniu bloku */
@@ -241,6 +241,109 @@
 	color: #6b7785;
 	font: 500 12px/1.4 ui-monospace, SFMono-Regular, Menlo, monospace;
 	letter-spacing: 0.04em;
+}
+
+/*--- UPROSZCZONY PODGLĄD BLOKÓW (resources/views/blocks/previews) ---*/
+
+/**
+ * Widoki `preview-*` renderują się zamiast sekcji, gdy blok jest w trybie
+ * podglądu. To karta z podsumowaniem treści — nazwa bloku, ustawienia
+ * i skrót pól — a nie kopia frontu.
+ */
+.editor-styles-wrapper .acf-preview {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+	padding: 16px;
+	border-radius: 6px;
+	background: #f8fafb;
+	color: #1e2a35;
+	font-size: 13px;
+	line-height: 1.5;
+}
+
+.editor-styles-wrapper .acf-preview__meta {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: space-between;
+	gap: 8px;
+	padding-bottom: 10px;
+	border-bottom: 1px solid #e3e7ea;
+}
+
+.editor-styles-wrapper .acf-preview__heading {
+	display: flex;
+	align-items: baseline;
+	gap: 8px;
+}
+
+.editor-styles-wrapper .acf-preview__title {
+	font-size: 15px;
+	font-weight: 600;
+}
+
+.editor-styles-wrapper .acf-preview__slug {
+	color: #6b7785;
+	font: 500 11px/1.4 ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+/* Nazwa bloku jest już w karcie — systemowa etykieta data-type byłaby dublem. */
+.editor-styles-wrapper .block-editor-block-list__block[data-type^="acf/"]:has(.acf-preview)::before {
+	display: none;
+}
+
+.editor-styles-wrapper .acf-preview__settings {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 6px;
+}
+
+.editor-styles-wrapper .acf-preview__setting {
+	padding: 2px 8px;
+	border-radius: 4px;
+	background: #eef1f4;
+	color: #4b5662;
+	font-size: 11px;
+}
+
+.editor-styles-wrapper .acf-preview__content {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+}
+
+.editor-styles-wrapper .acf-preview__grid {
+	gap: 10px;
+}
+
+.editor-styles-wrapper .acf-preview__card {
+	padding: 10px;
+	border: 1px solid #e3e7ea;
+	border-radius: 6px;
+	background: #fff;
+}
+
+.editor-styles-wrapper .acf-preview__media img {
+	border-radius: 4px;
+}
+
+.editor-styles-wrapper .acf-preview-actions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 6px;
+}
+
+.editor-styles-wrapper .acf-preview-actions:empty {
+	display: none;
+}
+
+.editor-styles-wrapper .acf-preview-button {
+	padding: 4px 12px;
+	border-radius: 4px;
+	background: var(--color-primary, #00a6df);
+	color: #fff;
+	font-size: 12px;
 }
 
 /**

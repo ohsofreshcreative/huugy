@@ -1,5 +1,9 @@
 <!--- steps -->
 
+@if (!empty($block->preview))
+@include('blocks.previews.preview-steps')
+@else
+
 <section
 	data-gsap-anim="section"
 	@if (!empty($section_id)) id="{{ $section_id }}" @endif
@@ -79,3 +83,5 @@
 		@endif
 	</div>
 </section>
+
+@endif

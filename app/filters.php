@@ -202,12 +202,10 @@ add_action('wp_enqueue_scripts', function () {
 	}
 }, 20);
 
-/*--- BREACRUMB SEPARATOR ---*/
-add_filter( 'woocommerce_breadcrumb_defaults', function ( $defaults ) {
-    // Opakowujemy separator w element <span> z własną klasą CSS.
-    $defaults['delimiter'] = '<span class="__separator">•</span>';
-    return $defaults;
-} );
+/*--- USUNIĘCIE BREADCRUMBS WOOCOMMERCE (wszędzie używamy Yoast #breadcrumbs) ---*/
+add_action('init', function () {
+    remove_action('woocommerce_before_main_content', 'woocommerce_breadcrumb', 20);
+});
 
 
 /*--- USUNIĘCIE POLECANYCH PRODUKTÓW Z KOSZYKA ---*/
@@ -277,7 +275,6 @@ add_action('wp', function () {
         return;
     }
 
-    remove_action('woocommerce_before_main_content', 'woocommerce_breadcrumb', 20);
     remove_action('woocommerce_before_shop_loop', 'woocommerce_result_count', 20);
     remove_action('woocommerce_before_shop_loop', 'woocommerce_catalog_ordering', 30);
 });

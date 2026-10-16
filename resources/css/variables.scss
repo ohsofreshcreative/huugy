@@ -919,7 +919,7 @@ h6,
 .woocommerce-breadcrumb,
 #breadcrumbs {
 	text-align: left;
-	color: var(--color-secondary-200);
+	/* color: var(--color-secondary-200); */
 	font-size: 14px;
 	display: flex;
 	row-gap: 1px;
@@ -931,21 +931,21 @@ h6,
 		gap:8px;
 	}
 
-	a {
+	/* a {
 		color: #FFF;
-	}
+	} */
 
 	a:hover {
-		color: var(--color-secondary-200);
+		color: var(--color-secondary-800);
 	}
 
 	span {
 		color: var(--color-primary-100) !important;
 	}
 
-	.breadcrumb_last {
+/* 	.breadcrumb_last {
 		color: var(--color-secondary-100) !important;
-	}
+	} */
 }
 
 

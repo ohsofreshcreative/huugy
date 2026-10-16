@@ -1,5 +1,9 @@
 <!--- download -->
 
+@if (!empty($block->preview))
+@include('blocks.previews.preview-download')
+@else
+
 <section
   data-gsap-anim="section"
   @if (!empty($section_id)) id="{{ $section_id }}" @endif
@@ -24,7 +28,7 @@
                 download>
                 Pobierz
                 <span class="flex items-center justify-center w-12 h-12 bg-primary radius" aria-hidden="true">
-                  <img src="{{ Vite::asset('resources/images/download.svg') }}" class="w-5 h-5 brightness-0 invert" alt="" />
+                  <img src="{{ get_template_directory_uri() }}/resources/images/download.svg" class="w-5 h-5 brightness-0 invert" alt="" />
                 </span>
               </x-button>
             </li>
@@ -34,3 +38,5 @@
     @endif
   </div>
 </section>
+
+@endif

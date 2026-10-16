@@ -22,6 +22,12 @@ the readme will list any important changes.
     do_action('woocommerce_before_main_content');
   @endphp
 
+  @if (function_exists('yoast_breadcrumb'))
+    <div class="__breadcrumb">
+      {!! yoast_breadcrumb('<p id="breadcrumbs">', '</p>', false) !!}
+    </div>
+  @endif
+
   @while(have_posts())
     @php
       the_post();

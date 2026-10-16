@@ -139,7 +139,6 @@ $category_items = $is_shop_main ? \App\Blocks\Categories::items() : [];
 </div>
 
 
-<!-- cta -->
 @php
 $g_octa = get_field('g_octa', 'option');
 $form = false;

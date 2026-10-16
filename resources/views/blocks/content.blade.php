@@ -1,5 +1,9 @@
 <!--- content -->
 
+@if (!empty($block->preview))
+@include('blocks.previews.preview-content')
+@else
+
 <section
 	data-gsap-anim="section"
 	@if(!empty($section_id)) id="{{ $section_id }}" @endif
@@ -67,3 +71,5 @@
 		</div>
 	</div>
 </section>
+
+@endif
