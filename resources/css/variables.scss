@@ -764,7 +764,7 @@ h6,
 }
 
 .btn-outline-primary-small {
-	background-color: #FFF !important;
+	background-color: var(--color-primary-50) !important;
 	border-color: var(--color-primary);
 	color: var(--color-primary) !important;
 	padding: 8px 32px !important;
@@ -808,18 +808,6 @@ h6,
 .btn-secondary-small:hover {
 	background-color: var(--color-secondary-hover);
 	border-color: var(--color-secondary-hover);
-	color: #fff;
-}
-
-.btn-outline-primary-small {
-	background-color: transparent;
-	border-color: var(--color-primary);
-	color: var(--color-primary);
-	padding: 8px 24px;
-}
-
-.btn-outline-primary-small:hover {
-	background-color: var(--color-primary);
 	color: #fff;
 }
 
